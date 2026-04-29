@@ -48,7 +48,7 @@
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
       }
       table tr:nth-child(even) {
-        background-color: #f8fafc;
+        background-color: #ffffff;
       }
       table tr:hover {
         background-color: #f1f5f9;
@@ -135,21 +135,60 @@
       .card:hover .emoji-animate {
         transform: scale(1.3) rotate(8deg);
       }
+
+      /* Mail Drop Animations */
+      @keyframes envelopeBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(2px);
+        }
+      }
+      @keyframes paperDrop {
+        0% {
+          transform: translateY(-12px) scale(0.5);
+          opacity: 0;
+        }
+        25% {
+          opacity: 1;
+        }
+        75% {
+          transform: translateY(3px) scale(0.85);
+          opacity: 1;
+          z-index: -1;
+        }
+        100% {
+          transform: translateY(6px) scale(0.5);
+          opacity: 0;
+          z-index: -1;
+        }
+      }
+      .icon-envelope {
+        animation: envelopeBounce 2s infinite ease-in-out;
+        z-index: 10;
+        position: relative;
+        background: transparent;
+      }
+      .icon-paper {
+        animation: paperDrop 2s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: absolute;
+        top: -2px;
+      }
+
+      /* Smooth Tab Fade */
+      .fade-wrapper {
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      /* Light Theme Enforcer for Date Pickers */
+      input[type="date"] {
+        color-scheme: light;
+      }
     </style>
   </head>
-  <body
-    class="p-4 md:p-6 text-slate-800 bg-gradient-to-br from-indigo-50 via-slate-100 to-emerald-50 min-h-screen relative z-0"
-  >
-    <div
-      class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
-    >
-      <div
-        class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-400/10 blur-[100px]"
-      ></div>
-      <div
-        class="absolute bottom-[-10%] right-[-5%] w-[35%] h-[35%] rounded-full bg-emerald-400/10 blur-[100px]"
-      ></div>
-    </div>
+  <body class="p-4 md:p-6 text-slate-800 bg-white min-h-screen relative z-0">
     <div class="w-full max-w-[98%] 2xl:max-w-[1800px] mx-auto animate-fade-in">
       <!-- HEADER -->
       <div
@@ -159,20 +198,15 @@
           <h1
             class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2"
           >
-            <svg
-              class="w-8 h-8 text-indigo-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="relative w-10 h-10 flex items-center justify-center mr-2"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
-              ></path>
-            </svg>
+              <img
+                src="mail.gif"
+                alt="BlackBox Icon"
+                class="w-full h-full object-contain"
+              />
+            </div>
             BlackBox Decipher
           </h1>
           <p class="text-slate-500 text-sm mt-1">
@@ -222,631 +256,900 @@
         <div id="game-tabs" class="flex flex-wrap gap-2"></div>
       </div>
 
-      <!-- Main KPIs -->
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-4">
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-slate-700"
-        >
+      <div id="main-dashboard-content" class="fade-wrapper opacity-100">
+        <!-- Main KPIs -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4 mb-4">
+          <!-- Total Feedbacks -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-slate-100 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-600"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            class="bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-200 border-t-4 border-t-slate-500 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-600 border border-slate-100"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
-              >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
-                <p
-                  class="text-[8px] font-bold text-slate-500 uppercase tracking-wider"
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
                 >
-                  Live
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
                 </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-slate-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Total Feedbacks
+              </h3>
+              <p
+                id="kpi-total"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
+          </div>
+
+          <!-- Excellent -->
+          <div
+            class="bg-gradient-to-br from-emerald-50/80 to-emerald-100/50 border border-emerald-100 border-t-4 border-t-emerald-500 rounded-2xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-emerald-500 border border-emerald-50"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                  <p
+                    class="text-[8px] font-bold text-emerald-600 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-col">
+              <h3
+                class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Excellent
+              </h3>
+              <div class="flex items-baseline gap-2">
+                <p
+                  id="kpi-exc"
+                  class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
+                >
+                  -
+                </p>
+                <span
+                  id="kpi-exc-pct"
+                  class="text-sm font-bold text-emerald-600"
+                  >-%</span
+                >
               </div>
             </div>
           </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Total Feedbacks
-            </h3>
-            <p
-              id="kpi-total"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
+
+          <!-- Good -->
+          <div
+            class="bg-gradient-to-br from-blue-50/80 to-blue-100/50 border border-blue-100 border-t-4 border-t-blue-500 rounded-2xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-blue-500 border border-blue-50"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.514"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                  <p
+                    class="text-[8px] font-bold text-blue-600 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-col">
+              <h3
+                class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Good
+              </h3>
+              <div class="flex items-baseline gap-2">
+                <p
+                  id="kpi-good"
+                  class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
+                >
+                  -
+                </p>
+                <span id="kpi-good-pct" class="text-sm font-bold text-blue-600"
+                  >-%</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Poor -->
+          <div
+            class="bg-gradient-to-br from-rose-50/80 to-rose-100/50 border border-rose-100 border-t-4 border-t-rose-500 rounded-2xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-rose-500 border border-rose-50"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.514"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                  <p
+                    class="text-[8px] font-bold text-rose-600 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-col">
+              <h3
+                class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Poor
+              </h3>
+              <div class="flex items-baseline gap-2">
+                <p
+                  id="kpi-poor-dist"
+                  class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
+                >
+                  -
+                </p>
+                <span id="kpi-poor-pct" class="text-sm font-bold text-rose-600"
+                  >-%</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Unrated -->
+          <div
+            class="bg-gradient-to-br from-slate-100/80 to-slate-200/50 border border-slate-200 border-t-4 border-t-slate-400 rounded-2xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-400 border border-slate-100"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M20 12H4"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+                  <p
+                    class="text-[8px] font-bold text-slate-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-col">
+              <h3
+                class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Unrated
+              </h3>
+              <div class="flex items-baseline gap-2">
+                <p
+                  id="kpi-unrated"
+                  class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
+                >
+                  -
+                </p>
+                <span
+                  id="kpi-unrated-pct"
+                  class="text-sm font-bold text-slate-500"
+                  >-%</span
+                >
+              </div>
+            </div>
           </div>
         </div>
 
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-rose-500"
-        >
+        <!-- Category Distribution KPIs -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+          <!-- Ads Not Working -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-rose-50 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-rose-100 flex items-center justify-center text-rose-500"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            class="bg-gradient-to-br from-rose-50/80 to-rose-100/50 border border-rose-100 border-t-4 border-t-rose-400 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-rose-500 border border-rose-50"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
-              >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                <p
-                  class="text-[8px] font-bold text-rose-500 uppercase tracking-wider"
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
                 >
-                  Live
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
                 </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-rose-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-rose-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
               </div>
             </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Ads Not Working
+              </h3>
+              <p
+                id="kpi-cat-ads-broken"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
           </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Ads Broken
-            </h3>
-            <p
-              id="kpi-cat-ads-broken"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
+
+          <!-- Too Many Ads -->
+          <div
+            class="bg-gradient-to-br from-orange-50/80 to-orange-100/50 border border-orange-100 border-t-4 border-t-orange-400 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-orange-500 border border-orange-50"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-orange-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Too Many Ads
+              </h3>
+              <p
+                id="kpi-cat-ads-many"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
+          </div>
+
+          <!-- Game Stuck -->
+          <div
+            class="bg-gradient-to-br from-red-50/80 to-red-100/50 border border-red-100 border-t-4 border-t-red-400 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-red-500 border border-red-50"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-red-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Game Stuck
+              </h3>
+              <p
+                id="kpi-cat-stuck"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
+          </div>
+
+          <!-- Level Problem -->
+          <div
+            class="bg-gradient-to-br from-indigo-50/80 to-indigo-100/50 border border-indigo-100 border-t-4 border-t-indigo-400 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-indigo-500 border border-indigo-50"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-indigo-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Level Problem
+              </h3>
+              <p
+                id="kpi-cat-lvl"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
+          </div>
+
+          <!-- Payment Issue -->
+          <div
+            class="bg-gradient-to-br from-emerald-50/80 to-emerald-100/50 border border-emerald-100 border-t-4 border-t-emerald-400 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-emerald-500 border border-emerald-50"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-emerald-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Payment Issue
+              </h3>
+              <p
+                id="kpi-cat-pay"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
+          </div>
+
+          <!-- Something Else -->
+          <div
+            class="bg-gradient-to-br from-slate-100/80 to-slate-200/50 border border-slate-200 border-t-4 border-t-slate-400 rounded-2xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+          >
+            <div class="flex justify-between items-start">
+              <div
+                class="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-500 border border-slate-100"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                >
+                  Data Source
+                </p>
+                <div class="flex items-center gap-1 justify-end">
+                  <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+                  <p
+                    class="text-[7px] font-bold text-slate-500 uppercase tracking-wider"
+                  >
+                    Synced
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h3
+                class="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5"
+              >
+                Something Else
+              </h3>
+              <p
+                id="kpi-cat-other"
+                class="text-2xl font-extrabold text-slate-800 tracking-tight leading-none"
+              >
+                -
+              </p>
+            </div>
           </div>
         </div>
 
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-orange-400"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
+        <!-- Expanded Data Visualization Grid -->
+        <div class="flex flex-col xl:flex-row gap-6 mb-8">
+          <!-- Tables Container -->
+          <div class="flex flex-col lg:flex-row gap-6 flex-1 xl:w-2/3">
+            <!-- Main Table Container -->
             <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-orange-100 flex items-center justify-center text-orange-500"
+              class="card flex-1 flex flex-col overflow-visible min-h-[250px]"
             >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <div
+                class="px-5 py-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 relative z-20"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h8a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                      ></path>
+                    </svg>
+                  </div>
+                  <h2
+                    class="text-[11px] font-bold uppercase tracking-widest text-slate-600"
+                  >
+                    Top 15 Feedback Receivers
+                  </h2>
+                </div>
+                <div class="relative">
+                  <button
+                    onclick="
+                      document
+                        .getElementById('top-filters-menu')
+                        .classList.toggle('hidden')
+                    "
+                    class="flex items-center gap-2 px-4 py-1.5 bg-white border border-slate-200 rounded-full text-[10px] font-bold text-slate-600 hover:bg-slate-50 shadow-sm transition-all active:scale-95"
+                  >
+                    <svg
+                      class="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                      ></path>
+                    </svg>
+                    Filters
+                  </button>
+                  <div
+                    id="top-filters-menu"
+                    class="hidden absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl p-4 z-50 flex flex-col gap-4"
+                  >
+                    <div>
+                      <label
+                        class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5"
+                        >Versions (Comma separated)</label
+                      >
+                      <input
+                        type="text"
+                        id="top-version"
+                        onkeyup="renderTopFeedbacks()"
+                        class="w-full bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 px-3 py-2 outline-none focus:border-indigo-400 transition-colors placeholder-slate-300 shadow-inner"
+                        placeholder="e.g. 0.0.59, 0.0.58"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5"
+                        >Date Range</label
+                      >
+                      <div class="flex flex-col gap-2">
+                        <input
+                          type="date"
+                          id="top-date-from"
+                          onchange="renderTopFeedbacks()"
+                          class="w-full bg-white border border-slate-200 rounded-lg text-xs text-slate-600 px-3 py-2 outline-none focus:border-indigo-400 transition-colors shadow-inner"
+                          title="Start Date"
+                        />
+                        <input
+                          type="date"
+                          id="top-date-to"
+                          onchange="renderTopFeedbacks()"
+                          class="w-full bg-white border border-slate-200 rounded-lg text-xs text-slate-600 px-3 py-2 outline-none focus:border-indigo-400 transition-colors shadow-inner"
+                          title="End Date"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex-1 overflow-x-auto custom-scrollbar relative z-10 p-5 pt-0"
               >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-orange-400"></div>
-                <p
-                  class="text-[8px] font-bold text-orange-500 uppercase tracking-wider"
+                <table
+                  class="w-full text-left text-sm whitespace-nowrap text-slate-600 border-separate border-spacing-y-1.5 mt-2"
                 >
-                  Live
-                </p>
+                  <thead
+                    class="text-[9px] uppercase font-bold text-slate-400 tracking-wider"
+                  >
+                    <tr>
+                      <th class="px-3 py-2 w-12 border-b border-slate-100">
+                        Rank
+                      </th>
+                      <th class="px-3 py-2 border-b border-slate-100">
+                        Prefab ID
+                      </th>
+                      <th class="px-3 py-2 border-b border-slate-100">
+                        Level ID
+                      </th>
+                      <th
+                        class="px-3 py-2 text-right border-b border-slate-100"
+                      >
+                        Hit Count
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="top-prefabs-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Secondary Tables Column -->
+            <div class="lg:w-1/3 flex flex-col gap-6 h-fit">
+              <!-- Version Spread Container -->
+              <div class="card flex flex-col overflow-hidden h-fit">
+                <div
+                  class="px-5 py-4 border-b border-slate-100 flex items-center gap-3 relative z-10"
+                >
+                  <div
+                    class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <h2
+                    class="text-[11px] font-bold uppercase tracking-widest text-slate-600"
+                  >
+                    Top 5 Version Spread
+                  </h2>
+                </div>
+                <div
+                  class="flex-1 overflow-x-auto custom-scrollbar relative z-10 p-5 pt-0"
+                >
+                  <table
+                    class="w-full text-left text-sm whitespace-nowrap text-slate-600 border-separate border-spacing-y-1.5 mt-2"
+                  >
+                    <thead
+                      class="text-[9px] uppercase font-bold text-slate-400 tracking-wider"
+                    >
+                      <tr>
+                        <th class="px-3 py-2 w-12 border-b border-slate-100">
+                          Rank
+                        </th>
+                        <th class="px-3 py-2 border-b border-slate-100">
+                          Version
+                        </th>
+                        <th
+                          class="px-3 py-2 text-right border-b border-slate-100"
+                        >
+                          Mails
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="version-spread-body"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Top 5 Dates Container -->
+              <div class="card flex flex-col overflow-hidden h-fit">
+                <div
+                  class="px-5 py-4 border-b border-slate-100 flex items-center gap-3 relative z-10"
+                >
+                  <div
+                    class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <h2
+                    class="text-[11px] font-bold uppercase tracking-widest text-slate-600"
+                  >
+                    Top 5 Active Dates
+                  </h2>
+                </div>
+                <div
+                  class="flex-1 overflow-x-auto custom-scrollbar relative z-10 p-5 pt-0"
+                >
+                  <table
+                    class="w-full text-left text-sm whitespace-nowrap text-slate-600 border-separate border-spacing-y-1.5 mt-2"
+                  >
+                    <thead
+                      class="text-[9px] uppercase font-bold text-slate-400 tracking-wider"
+                    >
+                      <tr>
+                        <th class="px-3 py-2 w-12 border-b border-slate-100">
+                          Rank
+                        </th>
+                        <th class="px-3 py-2 border-b border-slate-100">
+                          Date
+                        </th>
+                        <th
+                          class="px-3 py-2 text-right border-b border-slate-100"
+                        >
+                          Mails
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="top-dates-body"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Too Many Ads
-            </h3>
-            <p
-              id="kpi-cat-ads-many"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
+
+          <!-- Right Side Charts (Reordered) -->
+          <div class="flex flex-col gap-6 xl:w-1/3">
+            <div class="card p-5 flex-1 flex flex-col min-h-[220px]">
+              <h2
+                class="text-[10px] font-bold mb-3 text-slate-500 uppercase tracking-widest flex items-center gap-2"
+              >
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Prefab
+                Categories
+              </h2>
+              <div class="relative flex-1 min-h-[160px] z-10">
+                <canvas id="prefabCatChart"></canvas>
+              </div>
+            </div>
+            <div class="card p-5 flex-1 flex flex-col min-h-[220px]">
+              <h2
+                class="text-[10px] font-bold mb-3 text-slate-500 uppercase tracking-widest flex items-center gap-2"
+              >
+                <span class="w-2 h-2 rounded-full bg-sky-400"></span> Device
+                Tier Dist.
+              </h2>
+              <div class="relative flex-1 min-h-[160px] z-10">
+                <canvas id="deviceChart"></canvas>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-red-500"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-red-50 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-red-100 flex items-center justify-center text-red-500"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
-              >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-                <p
-                  class="text-[8px] font-bold text-red-500 uppercase tracking-wider"
-                >
-                  Live
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Game Stuck
-            </h3>
-            <p
-              id="kpi-cat-stuck"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-indigo-500"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-indigo-100 flex items-center justify-center text-indigo-500"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
-              >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
-                <p
-                  class="text-[8px] font-bold text-indigo-500 uppercase tracking-wider"
-                >
-                  Live
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Level Problem
-            </h3>
-            <p
-              id="kpi-cat-lvl"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-emerald-500"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-emerald-100 flex items-center justify-center text-emerald-500"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
-              >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                <p
-                  class="text-[8px] font-bold text-emerald-500 uppercase tracking-wider"
-                >
-                  Live
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Payment
-            </h3>
-            <p
-              id="kpi-cat-pay"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-slate-400"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-200 flex items-center justify-center text-slate-500"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                ></path>
-              </svg>
-            </div>
-            <div class="text-right">
-              <p
-                class="text-[7px] font-bold text-slate-400 uppercase tracking-widest mb-0.5"
-              >
-                Data Source
-              </p>
-              <div class="flex items-center gap-1 justify-end">
-                <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
-                <p
-                  class="text-[8px] font-bold text-slate-500 uppercase tracking-wider"
-                >
-                  Live
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Something Else
-            </h3>
-            <p
-              id="kpi-cat-other"
-              class="text-3xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
+        <!-- Advanced Telemetry Data Table -->
       </div>
-
-      <!-- Sentiment Distribution KPIs -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-emerald-500"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-emerald-50/60 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-10 h-10 rounded-xl bg-white shadow-sm border border-emerald-100 flex items-center justify-center text-emerald-500"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                ></path>
-              </svg>
-            </div>
-            <div
-              class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded shadow-sm border border-emerald-200"
-            >
-              <span
-                id="kpi-exc-pct"
-                class="text-[11px] font-bold uppercase tracking-wider"
-                >-%</span
-              >
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Excellent
-            </h3>
-            <p
-              id="kpi-exc"
-              class="text-4xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-blue-500"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-blue-50/60 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-10 h-10 rounded-xl bg-white shadow-sm border border-blue-100 flex items-center justify-center text-blue-500"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.514"
-                ></path>
-              </svg>
-            </div>
-            <div
-              class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded shadow-sm border border-blue-200"
-            >
-              <span
-                id="kpi-good-pct"
-                class="text-[11px] font-bold uppercase tracking-wider"
-                >-%</span
-              >
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Good
-            </h3>
-            <p
-              id="kpi-good"
-              class="text-4xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-rose-500"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-rose-50/60 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-10 h-10 rounded-xl bg-white shadow-sm border border-rose-100 flex items-center justify-center text-rose-500"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.514"
-                ></path>
-              </svg>
-            </div>
-            <div
-              class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded shadow-sm border border-rose-200"
-            >
-              <span
-                id="kpi-poor-pct"
-                class="text-[11px] font-bold uppercase tracking-wider"
-                >-%</span
-              >
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Poor
-            </h3>
-            <p
-              id="kpi-poor-dist"
-              class="text-4xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="card p-5 flex flex-col relative overflow-hidden border-t-4 border-t-slate-400"
-        >
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-slate-100/60 to-transparent pointer-events-none"
-          ></div>
-          <div class="flex justify-between items-start relative z-10">
-            <div
-              class="w-10 h-10 rounded-xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-slate-400"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg>
-            </div>
-            <div
-              class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded shadow-sm border border-slate-300"
-            >
-              <span
-                id="kpi-unrated-pct"
-                class="text-[11px] font-bold uppercase tracking-wider"
-                >-%</span
-              >
-            </div>
-          </div>
-          <div class="mt-5 relative z-10">
-            <h3
-              class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1"
-            >
-              Unrated
-            </h3>
-            <p
-              id="kpi-unrated"
-              class="text-4xl font-extrabold text-slate-800 tracking-tight leading-none"
-            >
-              -
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Expanded Data Visualization Grid -->
-      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
-        <!-- Main Chart -->
-        <div class="card p-5 xl:col-span-2 flex flex-col">
-          <h2 class="text-lg font-bold mb-4 text-slate-800">
-            Sentiment by Level ID (Top 15 Heaviest Loads)
-          </h2>
-          <div class="relative flex-1 min-h-[300px]">
-            <canvas id="levelChart"></canvas>
-          </div>
-        </div>
-        <!-- Right Side Analytical Charts -->
-        <div class="flex flex-col gap-6">
-          <div class="card p-5 flex-1">
-            <h2
-              class="text-sm font-bold mb-2 text-slate-600 uppercase tracking-wider"
-            >
-              Device Tier Distribution
-            </h2>
-            <div class="relative h-40">
-              <canvas id="deviceChart"></canvas>
-            </div>
-          </div>
-          <div class="card p-5 flex-1">
-            <h2
-              class="text-sm font-bold mb-2 text-slate-600 uppercase tracking-wider"
-            >
-              OS Generational Tiers
-            </h2>
-            <div class="relative h-40">
-              <canvas id="osChart"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Advanced Telemetry Data Table -->
-      <div class="card p-0 mb-8 w-full overflow-hidden flex flex-col">
+      <div
+        class="card p-0 mb-8 w-full overflow-hidden flex flex-col border border-slate-200 shadow-sm bg-white"
+      >
         <div
           class="flex flex-col lg:flex-row justify-between items-center p-5 border-b border-slate-200 bg-white gap-4"
         >
@@ -876,96 +1179,98 @@
           </button>
         </div>
 
-        <div class="overflow-x-auto custom-scrollbar max-h-[650px]">
-          <table
-            class="w-full text-left text-sm text-slate-600 whitespace-nowrap"
-          >
+        <div
+          class="overflow-x-hidden overflow-y-auto custom-scrollbar max-h-[650px]"
+        >
+          <table class="w-full text-left text-[11px] text-slate-600">
             <thead
-              class="text-xs text-slate-500 uppercase bg-slate-50 font-semibold border-b border-slate-200"
+              class="text-[10px] text-slate-500 uppercase bg-slate-50 font-semibold border-b border-slate-200"
             >
               <tr>
                 <!-- UI Enhanced Dynamic Column Filters inside Headers -->
-                <th class="px-4 py-4 align-top min-w-[140px]">
-                  <div class="mb-2">Date</div>
+                <th class="px-2 py-2 align-top w-[8%]">
+                  <div class="mb-1 truncate" title="Date">Date</div>
                   <input
                     type="date"
                     id="col-date"
                     onchange="applyHeaderFilters()"
-                    class="filter-input cursor-pointer"
+                    class="filter-input cursor-pointer !px-1 !py-1 text-[9px]"
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[130px]">
-                  <div class="mb-2">Experience</div>
+                <th class="px-2 py-2 align-top w-[7%]">
+                  <div class="mb-1 truncate" title="Experience">Exp.</div>
                   <select
                     id="col-exp"
                     onchange="applyHeaderFilters()"
-                    class="filter-input filter-select"
+                    class="filter-input filter-select !px-1 !py-1 text-[9px]"
                   >
                     <option value="">All</option>
-                    <option value="Excellent">Excellent</option>
+                    <option value="Excellent">Excel.</option>
                     <option value="Good">Good</option>
                     <option value="Poor">Poor</option>
-                    <option value="-">Unrated</option>
+                    <option value="-">None</option>
                   </select>
                 </th>
-                <th class="px-4 py-4 align-top min-w-[140px]">
-                  <div class="mb-2">Category</div>
+                <th class="px-2 py-2 align-top w-[10%]">
+                  <div class="mb-1 truncate" title="Category">Category</div>
                   <select
                     id="col-cat"
                     onchange="applyHeaderFilters()"
-                    class="filter-input filter-select"
+                    class="filter-input filter-select !px-1 !py-1 text-[9px]"
                   >
-                    <option value="">All Categories</option>
+                    <option value="">All</option>
                   </select>
                 </th>
-                <th class="px-4 py-4 align-top min-w-[110px]">
-                  <div class="mb-2">Content?</div>
+                <th class="px-2 py-2 align-top w-[6%]">
+                  <div class="mb-1 truncate" title="Content?">Content</div>
                   <select
                     id="col-content"
                     onchange="applyHeaderFilters()"
-                    class="filter-input filter-select"
+                    class="filter-input filter-select !px-1 !py-1 text-[9px]"
                   >
                     <option value="">All</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
                 </th>
-                <th class="px-4 py-4 align-top min-w-[120px]">
-                  <div class="mb-2">Version</div>
+                <th class="px-2 py-2 align-top w-[7%]">
+                  <div class="mb-1 truncate" title="Version">Ver.</div>
                   <select
                     id="col-ver"
                     onchange="applyHeaderFilters()"
-                    class="filter-input filter-select"
+                    class="filter-input filter-select !px-1 !py-1 text-[9px]"
                   >
-                    <option value="">All Versions</option>
+                    <option value="">All</option>
                   </select>
                 </th>
-                <th class="px-4 py-4 align-top min-w-[120px]">
-                  <div class="mb-2">Level ID</div>
+                <th class="px-2 py-2 align-top w-[6%]">
+                  <div class="mb-1 truncate" title="Level ID">Lvl ID</div>
                   <input
                     type="text"
                     id="col-lvl"
                     onkeyup="applyHeaderFilters()"
-                    class="filter-input"
-                    placeholder="Search ID..."
+                    class="filter-input !px-1 !py-1 text-[9px]"
+                    placeholder="Search..."
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[140px]">
-                  <div class="mb-2">Prefab ID</div>
+                <th class="px-2 py-2 align-top w-[8%]">
+                  <div class="mb-1 truncate" title="Prefab ID">Prefab ID</div>
                   <input
                     type="text"
                     id="col-prefab"
                     onkeyup="applyHeaderFilters()"
-                    class="filter-input"
-                    placeholder="Search Prefab..."
+                    class="filter-input !px-1 !py-1 text-[9px]"
+                    placeholder="Search..."
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[150px]">
+                <th class="px-2 py-2 align-top w-[9%]">
                   <div
-                    class="flex justify-between text-[10px] text-slate-500 font-bold uppercase tracking-wide mb-1"
+                    class="flex justify-between text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1"
                   >
-                    <span>Tot. RAM</span
-                    ><span id="totram-val" class="text-indigo-600">All</span>
+                    <span class="truncate" title="Tot. RAM">Tot.RAM</span
+                    ><span id="totram-val" class="text-indigo-600 ml-1"
+                      >All</span
+                    >
                   </div>
                   <input
                     type="range"
@@ -981,12 +1286,14 @@
                     class="range-slider"
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[150px]">
+                <th class="px-2 py-2 align-top w-[9%]">
                   <div
-                    class="flex justify-between text-[10px] text-slate-500 font-bold uppercase tracking-wide mb-1"
+                    class="flex justify-between text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1"
                   >
-                    <span>Game RAM</span
-                    ><span id="gameram-val" class="text-indigo-600">All</span>
+                    <span class="truncate" title="Game RAM">Gm.RAM</span
+                    ><span id="gameram-val" class="text-indigo-600 ml-1"
+                      >All</span
+                    >
                   </div>
                   <input
                     type="range"
@@ -1002,12 +1309,12 @@
                     class="range-slider"
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[130px]">
+                <th class="px-2 py-2 align-top w-[8%]">
                   <div
-                    class="flex justify-between text-[10px] text-slate-500 font-bold uppercase tracking-wide mb-1"
+                    class="flex justify-between text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1"
                   >
-                    <span>Battery</span
-                    ><span id="bat-val" class="text-indigo-600">All</span>
+                    <span class="truncate" title="Battery">Battery</span
+                    ><span id="bat-val" class="text-indigo-600 ml-1">All</span>
                   </div>
                   <input
                     type="range"
@@ -1023,12 +1330,12 @@
                     class="range-slider"
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[130px]">
+                <th class="px-2 py-2 align-top w-[6%]">
                   <div
-                    class="flex justify-between text-[10px] text-slate-500 font-bold uppercase tracking-wide mb-1"
+                    class="flex justify-between text-[9px] text-slate-500 font-bold uppercase tracking-wide mb-1"
                   >
-                    <span>Max FPS</span
-                    ><span id="fps-val" class="text-indigo-600">All</span>
+                    <span class="truncate" title="Max FPS">FPS</span
+                    ><span id="fps-val" class="text-indigo-600 ml-1">All</span>
                   </div>
                   <input
                     type="range"
@@ -1044,28 +1351,38 @@
                     class="range-slider"
                   />
                 </th>
-                <th class="px-4 py-4 align-top min-w-[150px]">
-                  <div class="mb-2 text-indigo-600">Device Tier</div>
+                <th class="px-2 py-2 align-top w-[8%]">
+                  <div
+                    class="mb-1 text-indigo-600 truncate"
+                    title="Device Tier"
+                  >
+                    Tier
+                  </div>
                   <select
                     id="col-device"
                     onchange="applyHeaderFilters()"
-                    class="filter-input filter-select border-indigo-200 text-indigo-700 bg-indigo-50/30"
+                    class="filter-input filter-select border-indigo-200 text-indigo-700 bg-indigo-50/30 !px-1 !py-1 text-[9px]"
                   >
-                    <option value="">All Tiers</option>
+                    <option value="">All</option>
                     <option value="Flagship">Flagship</option>
                     <option value="High-End">High-End</option>
                     <option value="Mid-Core">Mid-Core</option>
                     <option value="Low-End">Low-End</option>
                   </select>
                 </th>
-                <th class="px-4 py-4 align-top min-w-[160px]">
-                  <div class="mb-2 text-emerald-600">OS Generation</div>
+                <th class="px-2 py-2 align-top w-[8%]">
+                  <div
+                    class="mb-1 text-emerald-600 truncate"
+                    title="OS Generation"
+                  >
+                    OS Gen.
+                  </div>
                   <select
                     id="col-os"
                     onchange="applyHeaderFilters()"
-                    class="filter-input filter-select border-emerald-200 text-emerald-700 bg-emerald-50/30"
+                    class="filter-input filter-select border-emerald-200 text-emerald-700 bg-emerald-50/30 !px-1 !py-1 text-[9px]"
                   >
-                    <option value="">All OS Generations</option>
+                    <option value="">All</option>
                   </select>
                 </th>
               </tr>
@@ -1078,7 +1395,7 @@
 
         <!-- Pagination Controls -->
         <div
-          class="flex justify-between items-center p-4 bg-slate-50 border-t border-slate-200"
+          class="flex justify-between items-center p-4 bg-white border-t border-slate-200"
         >
           <p class="text-sm text-slate-500 font-medium" id="table-info">
             Showing 0 to 0 of 0 entries
@@ -1107,9 +1424,8 @@
     </div>
 
     <script>
-      let chartLevel = null;
       let chartDevice = null;
-      let chartOS = null;
+      let chartPrefabCat = null;
       let activeGameId = null;
       let games = [];
 
@@ -1117,6 +1433,7 @@
       let masterTableData = [];
       let systemMemoryCache = {}; // Local RAM cache to prevent blank UI on tab switch
       let cacheTimestamps = {}; // Tracks precise fetch times per matrix
+      let kpiMemory = {}; // Tracks previous KPI values for smooth rolling animations
       let proxyBlacklist = {};
       const PROXY_URL =
         "https://script.google.com/macros/s/AKfycbwmL2w41Q-OqjdjZGKbhYzHIZ4Ae4QrF6fxbMHfPB2ONmK2JmupIFrpLJt5mUkX_AXjoQ/exec"; // Replace with URL from Step 1
@@ -1214,61 +1531,74 @@
         activeGameId = id;
         renderTabs();
 
-        // Reset KPIs and Charts
-        document.getElementById("kpi-total").innerText = "-";
-        document.getElementById("kpi-cat-ads-broken").innerText = "-";
-        document.getElementById("kpi-cat-ads-many").innerText = "-";
-        document.getElementById("kpi-cat-stuck").innerText = "-";
-        document.getElementById("kpi-cat-lvl").innerText = "-";
-        document.getElementById("kpi-cat-pay").innerText = "-";
-        document.getElementById("kpi-cat-other").innerText = "-";
+        const dash = document.getElementById("main-dashboard-content");
+        if (dash) dash.style.opacity = "0";
 
-        document.getElementById("kpi-exc").innerText = "-";
-        document.getElementById("kpi-good").innerText = "-";
-        document.getElementById("kpi-poor-dist").innerText = "-";
-        document.getElementById("kpi-unrated").innerText = "-";
-        document.getElementById("kpi-exc-pct").innerText = "-";
-        document.getElementById("kpi-good-pct").innerText = "-";
-        document.getElementById("kpi-poor-pct").innerText = "-";
-        document.getElementById("kpi-unrated-pct").innerText = "-";
-        document
-          .getElementById("refresh-icon")
-          .classList.remove("animate-spin");
+        setTimeout(() => {
+          // Reset KPIs and Charts
+          document.getElementById("kpi-total").innerText = "-";
+          document.getElementById("kpi-cat-ads-broken").innerText = "-";
+          document.getElementById("kpi-cat-ads-many").innerText = "-";
+          document.getElementById("kpi-cat-stuck").innerText = "-";
+          document.getElementById("kpi-cat-lvl").innerText = "-";
+          document.getElementById("kpi-cat-pay").innerText = "-";
+          document.getElementById("kpi-cat-other").innerText = "-";
 
-        if (chartLevel) chartLevel.destroy();
-        if (chartDevice) chartDevice.destroy();
-        if (chartOS) chartOS.destroy();
+          document.getElementById("kpi-exc").innerText = "-";
+          document.getElementById("kpi-good").innerText = "-";
+          document.getElementById("kpi-poor-dist").innerText = "-";
+          document.getElementById("kpi-unrated").innerText = "-";
+          document.getElementById("kpi-exc-pct").innerText = "-";
+          document.getElementById("kpi-good-pct").innerText = "-";
+          document.getElementById("kpi-poor-pct").innerText = "-";
+          document.getElementById("kpi-unrated-pct").innerText = "-";
+          document
+            .getElementById("refresh-icon")
+            .classList.remove("animate-spin");
 
-        // Reset Filter UI Text/Dropdowns
-        const filterIds = [
-          "col-date",
-          "col-exp",
-          "col-cat",
-          "col-content",
-          "col-ver",
-          "col-lvl",
-          "col-prefab",
-          "col-device",
-          "col-os",
-        ];
-        filterIds.forEach((id) => (document.getElementById(id).value = ""));
+          document.getElementById("top-prefabs-body").innerHTML = "";
 
-        // Reset Sliders
-        document.getElementById("col-totram").value = 16000;
-        updateRangeLabel("totram", 16000, 16000, "MB");
-        document.getElementById("col-gameram").value = 2500;
-        updateRangeLabel("gameram", 2500, 2500, "MB");
-        document.getElementById("col-bat").value = 100;
-        updateRangeLabel("bat", 100, 100, "%");
-        document.getElementById("col-fps").value = 120;
-        updateRangeLabel("fps", 120, 120, "");
+          if (chartDevice) chartDevice.destroy();
+          if (chartPrefabCat) chartPrefabCat.destroy();
 
-        if (systemMemoryCache[activeGameId]) {
-          processData(systemMemoryCache[activeGameId]);
-        } else {
-          document.getElementById("last-sync").innerText =
-            "Awaiting Interval or Manual Pull...";
-        }
+          // Reset Filter UI Text/Dropdowns
+          const filterIds = [
+            "col-date",
+            "col-exp",
+            "col-cat",
+            "col-content",
+            "col-ver",
+            "col-lvl",
+            "col-prefab",
+            "col-device",
+            "col-os",
+            "top-version",
+            "top-date-from",
+            "top-date-to",
+          ];
+          filterIds.forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.value = "";
+          });
+
+          // Reset Sliders
+          document.getElementById("col-totram").value = 16000;
+          updateRangeLabel("totram", 16000, 16000, "MB");
+          document.getElementById("col-gameram").value = 2500;
+          updateRangeLabel("gameram", 2500, 2500, "MB");
+          document.getElementById("col-bat").value = 100;
+          updateRangeLabel("bat", 100, 100, "%");
+          document.getElementById("col-fps").value = 120;
+          updateRangeLabel("fps", 120, 120, "");
+
+          if (systemMemoryCache[activeGameId]) {
+            processData(systemMemoryCache[activeGameId], true);
+          } else {
+            document.getElementById("last-sync").innerText =
+              "Awaiting Interval or Manual Pull...";
+          }
+          if (dash) dash.style.opacity = "1";
+        }, 250);
       }
 
       async function fetchData(useProxy = true) {
@@ -1341,7 +1671,7 @@
         }
       }
 
-      function processData(data) {
+      function processData(data, isTabSwitch = false) {
         let total = 0;
 
         let catStats = {
@@ -1358,14 +1688,21 @@
         let poorTotal = 0;
         let unratedTotal = 0;
 
-        let levelStats = {};
         let deviceStats = {
           Flagship: 0,
           "High-End": 0,
           "Mid-Core": 0,
           "Low-End": 0,
         };
-        let osStats = {};
+        let prefabCatStats = {
+          Draw: 0,
+          Erase: 0,
+          Comic: 0,
+          Story: 0,
+          "Task Merge": 0,
+          "Task Draw": 0,
+          Other: 0,
+        };
 
         masterTableData = [];
 
@@ -1421,17 +1758,36 @@
 
           // Data aggregation for charts
           deviceStats[deviceType]++;
-          osStats[osTier] = (osStats[osTier] || 0) + 1;
+
+          // Categorization Counters (Strict Prefab Mapping)
+          let pStr = row["Prefab ID"] || "";
+          if (pStr !== "-" && pStr !== "") {
+            if (activeGameId === "g2") {
+              if (/comic/i.test(pStr)) prefabCatStats["Comic"]++;
+              else if (pStr.includes("L")) prefabCatStats["Story"]++;
+              else if (pStr.includes("E")) prefabCatStats["Erase"]++;
+              else if (pStr.includes("D")) prefabCatStats["Draw"]++;
+              else prefabCatStats["Other"]++;
+            } else {
+              if (/Task_\d+_Merge/i.test(pStr)) prefabCatStats["Task Merge"]++;
+              else if (/Task_\d+_DTM/i.test(pStr))
+                prefabCatStats["Task Draw"]++;
+              else if (/comic/i.test(pStr)) prefabCatStats["Comic"]++;
+              else if (pStr.includes("D")) prefabCatStats["Draw"]++;
+              else if (pStr.includes("E")) prefabCatStats["Erase"]++;
+              else if (pStr.includes("L")) prefabCatStats["Story"]++;
+              else prefabCatStats["Other"]++;
+            }
+          }
 
           // Categorization Counters (Strict Telemetry Mapping)
-          let rawCat = (row["Category"] || "").toLowerCase().trim();
-          if (rawCat === "ads not working") catStats.adsBroken++;
-          else if (rawCat === "too many ads") catStats.adsMany++;
-          else if (rawCat === "game stuck") catStats.stuck++;
-          else if (rawCat === "level problem") catStats.lvl++;
-          else if (rawCat.includes("payment"))
-            catStats.pay++; // .includes catches "payment ime" typo
-          else if (rawCat === "something else") catStats.other++;
+          let rawCat = (row["Category"] || "").trim();
+          if (rawCat === "Game Stuck") catStats.stuck++;
+          else if (rawCat === "Level Problem") catStats.lvl++;
+          else if (rawCat === "Payment issue") catStats.pay++;
+          else if (rawCat === "Something else") catStats.other++;
+          else if (rawCat === "Ads not working") catStats.adsBroken++;
+          else if (rawCat === "Too many Ads") catStats.adsMany++;
 
           // Description content preservation
           let rawDesc = row["Description"] || "";
@@ -1454,7 +1810,7 @@
             os: osTier,
           });
 
-          // ---- SENTIMENT & HW KPIs ----
+          // ---- SENTIMENT KPIs ----
           let rawExpClean = (rawExp || "").trim();
 
           if (!rawExpClean || rawExpClean === "-") {
@@ -1462,19 +1818,9 @@
             return;
           }
 
-          if (!levelStats[lvl])
-            levelStats[lvl] = { poor: 0, good: 0, excellent: 0 };
-
-          if (rawExpClean === "Poor") {
-            levelStats[lvl].poor++;
-            poorTotal++;
-          } else if (rawExpClean === "Good") {
-            levelStats[lvl].good++;
-            goodTotal++;
-          } else if (rawExpClean === "Excellent") {
-            levelStats[lvl].excellent++;
-            excTotal++;
-          }
+          if (rawExpClean === "Poor") poorTotal++;
+          else if (rawExpClean === "Good") goodTotal++;
+          else if (rawExpClean === "Excellent") excTotal++;
         });
 
         populateDynamicDropdowns();
@@ -1485,9 +1831,9 @@
           poorTotal,
           unratedTotal,
           catStats,
-          levelStats,
           deviceStats,
-          osStats,
+          prefabCatStats,
+          isTabSwitch,
         );
         applyHeaderFilters();
       }
@@ -1540,6 +1886,37 @@
         }
       }
 
+      function animateValue(id, start, end, duration, isPercentage) {
+        const obj = document.getElementById(id);
+        if (!obj) return;
+        if (start === end) {
+          obj.innerText = isPercentage
+            ? end.toFixed(1) + "%"
+            : end.toLocaleString();
+          return;
+        }
+        let startTimestamp = null;
+        const step = (timestamp) => {
+          if (!startTimestamp) startTimestamp = timestamp;
+          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+          const ease = progress === 1 ? 1 : 1 - Math.pow(1 - progress, 4);
+          const current = ease * (end - start) + start;
+
+          obj.innerText = isPercentage
+            ? current.toFixed(1) + "%"
+            : Math.floor(current).toLocaleString();
+
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          } else {
+            obj.innerText = isPercentage
+              ? end.toFixed(1) + "%"
+              : end.toLocaleString();
+          }
+        };
+        window.requestAnimationFrame(step);
+      }
+
       function updateUI(
         total,
         excTotal,
@@ -1547,61 +1924,57 @@
         poorTotal,
         unratedTotal,
         catStats,
-        levelStats,
         deviceStats,
-        osStats,
+        prefabCatStats,
+        isTabSwitch = false,
       ) {
-        document.getElementById("kpi-total").innerText = total.toLocaleString();
-        document.getElementById("kpi-cat-ads-broken").innerText =
-          catStats.adsBroken.toLocaleString();
-        document.getElementById("kpi-cat-ads-many").innerText =
-          catStats.adsMany.toLocaleString();
-        document.getElementById("kpi-cat-stuck").innerText =
-          catStats.stuck.toLocaleString();
-        document.getElementById("kpi-cat-lvl").innerText =
-          catStats.lvl.toLocaleString();
-        document.getElementById("kpi-cat-pay").innerText =
-          catStats.pay.toLocaleString();
-        document.getElementById("kpi-cat-other").innerText =
-          catStats.other.toLocaleString();
+        const calcPctRaw = (val, tot) => (tot > 0 ? (val / tot) * 100 : 0);
 
-        const calcPct = (val, tot) =>
-          tot > 0 ? ((val / tot) * 100).toFixed(1) + "%" : "0%";
+        const metrics = [
+          { id: "kpi-total", val: total },
+          { id: "kpi-cat-ads-broken", val: catStats.adsBroken },
+          { id: "kpi-cat-ads-many", val: catStats.adsMany },
+          { id: "kpi-cat-stuck", val: catStats.stuck },
+          { id: "kpi-cat-lvl", val: catStats.lvl },
+          { id: "kpi-cat-pay", val: catStats.pay },
+          { id: "kpi-cat-other", val: catStats.other },
+          { id: "kpi-exc", val: excTotal },
+          { id: "kpi-good", val: goodTotal },
+          { id: "kpi-poor-dist", val: poorTotal },
+          { id: "kpi-unrated", val: unratedTotal },
+        ];
 
-        document.getElementById("kpi-exc").innerText =
-          excTotal.toLocaleString();
-        document.getElementById("kpi-exc-pct").innerText = calcPct(
-          excTotal,
-          total,
-        );
+        const pctMetrics = [
+          { id: "kpi-exc-pct", val: calcPctRaw(excTotal, total) },
+          { id: "kpi-good-pct", val: calcPctRaw(goodTotal, total) },
+          { id: "kpi-poor-pct", val: calcPctRaw(poorTotal, total) },
+          { id: "kpi-unrated-pct", val: calcPctRaw(unratedTotal, total) },
+        ];
 
-        document.getElementById("kpi-good").innerText =
-          goodTotal.toLocaleString();
-        document.getElementById("kpi-good-pct").innerText = calcPct(
-          goodTotal,
-          total,
-        );
+        metrics.forEach((m) => {
+          let prev = kpiMemory[m.id] || 0;
+          if (isTabSwitch) {
+            document.getElementById(m.id).innerText = m.val.toLocaleString();
+          } else {
+            animateValue(m.id, prev, m.val, 2000, false);
+          }
+          kpiMemory[m.id] = m.val;
+        });
 
-        document.getElementById("kpi-poor-dist").innerText =
-          poorTotal.toLocaleString();
-        document.getElementById("kpi-poor-pct").innerText = calcPct(
-          poorTotal,
-          total,
-        );
+        pctMetrics.forEach((m) => {
+          let prev = kpiMemory[m.id] || 0;
+          if (isTabSwitch) {
+            document.getElementById(m.id).innerText = m.val.toFixed(1) + "%";
+          } else {
+            animateValue(m.id, prev, m.val, 2000, true);
+          }
+          kpiMemory[m.id] = m.val;
+        });
 
-        document.getElementById("kpi-unrated").innerText =
-          unratedTotal.toLocaleString();
-        document.getElementById("kpi-unrated-pct").innerText = calcPct(
-          unratedTotal,
-          total,
-        );
-
-        let sortedLevels = Object.keys(levelStats)
-          .sort((a, b) => levelStats[b].poor - levelStats[a].poor)
-          .slice(0, 15);
-
-        renderMainChart(sortedLevels, levelStats);
-        renderSideCharts(deviceStats, osStats);
+        renderTopFeedbacks();
+        renderVersionSpread();
+        renderTopDates();
+        renderSideCharts(deviceStats, prefabCatStats);
 
         let syncText = document.getElementById("last-sync");
         syncText.innerText =
@@ -1612,62 +1985,222 @@
           .classList.remove("animate-spin");
       }
 
-      function renderMainChart(labels, dataMap) {
-        let ctx = document.getElementById("levelChart").getContext("2d");
+      function renderTopFeedbacks() {
+        const tbody = document.getElementById("top-prefabs-body");
 
-        let poorData = labels.map((l) => dataMap[l].poor);
-        let goodData = labels.map((l) => dataMap[l].good);
-        let excData = labels.map((l) => dataMap[l].excellent);
+        const dateFrom = document.getElementById("top-date-from").value;
+        const dateTo = document.getElementById("top-date-to").value;
+        const versionsRaw = document.getElementById("top-version").value;
+        const versions = versionsRaw
+          ? versionsRaw
+              .split(",")
+              .map((v) => v.trim().toLowerCase())
+              .filter((v) => v)
+          : [];
 
-        if (chartLevel) chartLevel.destroy();
+        // Apply strict filter conditions
+        let filtered = masterTableData.filter((r) => {
+          let rDateVal = new Date(r.date).getTime();
+          if (!isNaN(rDateVal)) {
+            if (dateFrom && rDateVal < new Date(dateFrom).getTime())
+              return false;
+            if (dateTo && rDateVal > new Date(dateTo).getTime()) return false;
+          }
 
-        chartLevel = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: labels.map((l) => "Lvl " + l),
-            datasets: [
-              {
-                label: "Poor",
-                data: poorData,
-                backgroundColor: "#f43f5e",
-                borderRadius: 4,
-              },
-              {
-                label: "Good",
-                data: goodData,
-                backgroundColor: "#3b82f6",
-                borderRadius: 4,
-              },
-              {
-                label: "Excellent",
-                data: excData,
-                backgroundColor: "#10b981",
-                borderRadius: 4,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              x: { stacked: true, grid: { display: false } },
-              y: { stacked: true, grid: { color: "#f1f5f9" } },
-            },
-            plugins: {
-              legend: {
-                position: "top",
-                labels: { usePointStyle: true, boxWidth: 8 },
-              },
-            },
-          },
+          if (versions.length > 0) {
+            let rVer = (r.ver || "").toLowerCase();
+            if (!versions.some((v) => rVer.includes(v))) return false;
+          }
+          return true;
         });
+
+        // Slice combinations of exact Prefab + exact Lvl
+        let stats = {};
+        filtered.forEach((r) => {
+          let prefab = r.prefab || "-";
+          let lvl = r.lvl || "-";
+          if (prefab !== "-" || lvl !== "-") {
+            let key = prefab + "|||" + lvl;
+            if (!stats[key])
+              stats[key] = { prefab: prefab, lvl: lvl, count: 0 };
+            stats[key].count++;
+          }
+        });
+
+        // Compute rankings
+        let sorted = Object.values(stats)
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 15);
+
+        if (sorted.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" class="px-5 py-4 text-center text-slate-400 font-medium text-xs">No feedback matches these filters.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = sorted
+          .map((stat, idx) => {
+            let rankColor =
+              idx === 0
+                ? "bg-amber-100 text-amber-700 border-amber-200"
+                : idx === 1
+                  ? "bg-slate-200 text-slate-700 border-slate-300"
+                  : idx === 2
+                    ? "bg-orange-100 text-orange-700 border-orange-200"
+                    : "bg-slate-50 text-slate-500 border-slate-100";
+
+            return `
+            <tr class="group cursor-default">
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 rounded-l-xl transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">
+                <div class="w-6 h-6 flex items-center justify-center rounded text-[10px] font-bold border shadow-sm transition-colors group-hover:bg-white ${rankColor}">
+                  ${idx + 1}
+                </div>
+              </td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 font-mono text-[11px] font-bold text-slate-800 truncate max-w-[150px] transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">${stat.prefab}</td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 text-[11px] font-bold text-slate-500 transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">Lvl ${stat.lvl}</td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 text-right rounded-r-xl transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200 shadow-sm group-hover:bg-white">
+                  ${stat.count.toLocaleString()}
+                </span>
+              </td>
+            </tr>
+          `;
+          })
+          .join("");
       }
 
-      function renderSideCharts(deviceStats, osStats) {
+      function renderVersionSpread() {
+        const tbody = document.getElementById("version-spread-body");
+        let stats = {};
+
+        masterTableData.forEach((r) => {
+          let v = r.ver && r.ver !== "-" ? r.ver : "Unknown";
+          stats[v] = (stats[v] || 0) + 1;
+        });
+
+        let sorted = Object.entries(stats)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+
+        if (sorted.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" class="px-5 py-4 text-center text-slate-400 font-medium text-xs">No data.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = sorted
+          .map((stat, idx) => {
+            let rankColor =
+              idx === 0
+                ? "bg-amber-100 text-amber-700 border-amber-200"
+                : idx === 1
+                  ? "bg-slate-200 text-slate-700 border-slate-300"
+                  : idx === 2
+                    ? "bg-orange-100 text-orange-700 border-orange-200"
+                    : "bg-slate-50 text-slate-500 border-slate-100";
+
+            return `
+            <tr class="group cursor-default">
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 rounded-l-xl transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">
+                <div class="w-6 h-6 flex items-center justify-center rounded text-[10px] font-bold border shadow-sm transition-colors group-hover:bg-white ${rankColor}">
+                  ${idx + 1}
+                </div>
+              </td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 font-mono text-[11px] font-bold text-slate-800 transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">${stat[0]}</td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 text-right rounded-r-xl transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200 shadow-sm group-hover:bg-white">
+                  ${stat[1].toLocaleString()}
+                </span>
+              </td>
+            </tr>
+          `;
+          })
+          .join("");
+      }
+
+      function renderTopDates() {
+        const tbody = document.getElementById("top-dates-body");
+        let stats = {};
+
+        masterTableData.forEach((r) => {
+          let d = r.date && r.date !== "-" ? r.date : "Unknown";
+          stats[d] = (stats[d] || 0) + 1;
+        });
+
+        let sorted = Object.entries(stats)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+
+        if (sorted.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" class="px-5 py-4 text-center text-slate-400 font-medium text-xs">No data.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = sorted
+          .map((stat, idx) => {
+            let rankColor =
+              idx === 0
+                ? "bg-amber-100 text-amber-700 border-amber-200"
+                : idx === 1
+                  ? "bg-slate-200 text-slate-700 border-slate-300"
+                  : idx === 2
+                    ? "bg-orange-100 text-orange-700 border-orange-200"
+                    : "bg-slate-50 text-slate-500 border-slate-100";
+
+            return `
+            <tr class="group cursor-default">
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 rounded-l-xl transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">
+                <div class="w-6 h-6 flex items-center justify-center rounded text-[10px] font-bold border shadow-sm transition-colors group-hover:bg-white ${rankColor}">
+                  ${idx + 1}
+                </div>
+              </td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 font-mono text-[11px] font-bold text-slate-800 transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">${stat[0]}</td>
+              <td class="px-3 py-3 bg-transparent group-hover:bg-slate-50 group-active:bg-slate-100 text-right rounded-r-xl transition-colors shadow-[inset_0_-1px_0_rgba(0,0,0,0.02)] group-hover:shadow-none group-active:shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)]">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200 shadow-sm group-hover:bg-white">
+                  ${stat[1].toLocaleString()}
+                </span>
+              </td>
+            </tr>
+          `;
+          })
+          .join("");
+      }
+
+      function renderSideCharts(deviceStats, prefabCatStats) {
+        const tooltipPlugin = {
+          backgroundColor: "#1e293b",
+          titleColor: "#ffffff",
+          bodyColor: "#ffffff",
+          titleFont: {
+            size: 13,
+            weight: "bold",
+            family: "ui-sans-serif, system-ui, sans-serif",
+          },
+          bodyFont: {
+            size: 13,
+            weight: "bold",
+            family: "ui-sans-serif, system-ui, sans-serif",
+          },
+          padding: 12,
+          cornerRadius: 8,
+          usePointStyle: true,
+          boxWidth: 10,
+          boxHeight: 10,
+          boxPadding: 6,
+          callbacks: {
+            label: function (context) {
+              let label = context.label || "";
+              let total = context.chart._metasets[context.datasetIndex].total;
+              let value = context.raw;
+              let percentage =
+                total > 0 ? ((value / total) * 100).toFixed(2) + "%" : "0%";
+              return ` ${label}: ${percentage}`;
+            },
+          },
+        };
+
         let ctxDev = document.getElementById("deviceChart").getContext("2d");
         if (chartDevice) chartDevice.destroy();
         chartDevice = new Chart(ctxDev, {
-          type: "doughnut",
+          type: "pie",
           data: {
             labels: ["Flagship", "High-End", "Mid-Core", "Low-End"],
             datasets: [
@@ -1679,15 +2212,16 @@
                   deviceStats["Low-End"],
                 ],
                 backgroundColor: ["#6366f1", "#3b82f6", "#0ea5e9", "#94a3b8"],
-                borderWidth: 0,
+                borderWidth: 1,
+                borderColor: "#ffffff",
               },
             ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "70%",
             plugins: {
+              tooltip: tooltipPlugin,
               legend: {
                 position: "right",
                 labels: {
@@ -1700,39 +2234,38 @@
           },
         });
 
-        let sortedOS = Object.entries(osStats).sort((a, b) => b[1] - a[1]);
-        let topOS = sortedOS.slice(0, 5);
-        let otherCount = sortedOS
-          .slice(5)
-          .reduce((sum, curr) => sum + curr[1], 0);
-        if (otherCount > 0) topOS.push(["Other", otherCount]);
+        let sortedCats = Object.entries(prefabCatStats)
+          .filter((c) => c[1] > 0)
+          .sort((a, b) => b[1] - a[1]);
 
-        let ctxOS = document.getElementById("osChart").getContext("2d");
-        if (chartOS) chartOS.destroy();
-        chartOS = new Chart(ctxOS, {
-          type: "doughnut",
+        let ctxCat = document.getElementById("prefabCatChart").getContext("2d");
+        if (chartPrefabCat) chartPrefabCat.destroy();
+        chartPrefabCat = new Chart(ctxCat, {
+          type: "pie",
           data: {
-            labels: topOS.map((o) => o[0]),
+            labels: sortedCats.map((o) => o[0]),
             datasets: [
               {
-                data: topOS.map((o) => o[1]),
+                data: sortedCats.map((o) => o[1]),
                 backgroundColor: [
                   "#10b981",
-                  "#34d399",
-                  "#6ee7b7",
-                  "#a7f3d0",
-                  "#d1fae5",
-                  "#f1f5f9",
+                  "#3b82f6",
+                  "#f43f5e",
+                  "#f59e0b",
+                  "#8b5cf6",
+                  "#06b6d4",
+                  "#94a3b8",
                 ],
-                borderWidth: 0,
+                borderWidth: 1,
+                borderColor: "#ffffff",
               },
             ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "70%",
             plugins: {
+              tooltip: tooltipPlugin,
               legend: {
                 position: "right",
                 labels: {
@@ -1818,20 +2351,20 @@
                 : `<span class="text-slate-400 text-xs">No</span>`;
 
             return `
-            <tr class="transition-colors">
-              <td class="px-4 py-3">${r.date}</td>
-              <td class="px-4 py-3"><span class="${expColor}">${r.exp}</span></td>
-              <td class="px-4 py-3 truncate max-w-[140px]" title="${r.cat}">${r.cat}</td>
-              <td class="px-4 py-3">${contentBadge}</td>
-              <td class="px-4 py-3 text-xs font-mono text-slate-500">${r.ver}</td>
-              <td class="px-4 py-3 font-bold text-slate-800">${r.lvl}</td>
-              <td class="px-4 py-3 font-mono text-xs text-slate-500 truncate max-w-[140px]" title="${r.prefab}">${r.prefab}</td>
-              <td class="px-4 py-3 text-slate-500 text-xs">${r.totRam}</td>
-              <td class="px-4 py-3 text-slate-500 text-xs">${r.gameRam}</td>
-              <td class="px-4 py-3 ${parseInt(r.bat) < 20 ? "text-rose-600 font-bold bg-rose-50 rounded px-1" : "text-slate-600"}">${r.bat}</td>
-              <td class="px-4 py-3 ${parseInt(r.fps) < 28 ? "text-rose-600 font-bold bg-rose-50 rounded px-1" : "text-slate-600"}">${r.fps}</td>
-              <td class="px-4 py-3 font-semibold text-indigo-600">${r.device}</td>
-              <td class="px-4 py-3 font-medium text-emerald-600 text-xs truncate max-w-[140px]" title="${r.os}">${r.os}</td>
+            <tr class="transition-colors hover:bg-slate-50">
+              <td class="px-2 py-2 truncate" title="${r.date}">${r.date}</td>
+              <td class="px-2 py-2"><span class="${expColor}">${r.exp}</span></td>
+              <td class="px-2 py-2 truncate max-w-[80px]" title="${r.cat}">${r.cat}</td>
+              <td class="px-2 py-2">${contentBadge}</td>
+              <td class="px-2 py-2 text-[10px] font-mono text-slate-500">${r.ver}</td>
+              <td class="px-2 py-2 font-bold text-slate-800">${r.lvl}</td>
+              <td class="px-2 py-2 font-mono text-[10px] text-slate-500 truncate max-w-[80px]" title="${r.prefab}">${r.prefab}</td>
+              <td class="px-2 py-2 text-slate-500 text-[10px]">${r.totRam}</td>
+              <td class="px-2 py-2 text-slate-500 text-[10px]">${r.gameRam}</td>
+              <td class="px-2 py-2 ${parseInt(r.bat) < 20 ? "text-rose-600 font-bold bg-rose-50 rounded px-1" : "text-slate-600"}">${r.bat}</td>
+              <td class="px-2 py-2 ${parseInt(r.fps) < 28 ? "text-rose-600 font-bold bg-rose-50 rounded px-1" : "text-slate-600"}">${r.fps}</td>
+              <td class="px-2 py-2 font-semibold text-indigo-600 text-[10px]">${r.device}</td>
+              <td class="px-2 py-2 font-medium text-emerald-600 text-[10px] truncate max-w-[80px]" title="${r.os}">${r.os}</td>
             </tr>
           `;
           })
